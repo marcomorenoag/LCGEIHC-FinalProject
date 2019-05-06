@@ -39,11 +39,19 @@
 #include "Skybox.h"
 #include "SpotLight.h"
 
+
 const float toRadians = 3.14159265f / 180.0f;
 Window mainWindow;
 std::vector<Mesh*> meshList;
 std::vector<Shader> shaderList;
 Camera camera;
+
+// Variables para animación
+float posChairLeft;
+float posChairBack;
+float posChairFront;
+float posRotMesa;
+float posLargeBoxes;
 
 // Texturas
 Texture floorTexture;
@@ -193,7 +201,7 @@ int main()
 	CrearCubo();
 	CreateShaders();
 
-	camera = Camera(glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0.0f, 1.0f, 0.0f), -10.0f, 10.0f, 5.0f, 0.5f);
+	camera = Camera(glm::vec3(0.0f, 2.0f, 7.0f), glm::vec3(0.0f, 1.0f, 0.0f), 180.0f, 0.0f, 5.0f, 0.5f);
 
 	// Definición de Texturas
 	floorTexture = Texture("Textures/suelo.png");
@@ -282,6 +290,22 @@ int main()
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0, uniformSpecularIntensity = 0, uniformShininess = 0;
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 300.0f);
 
+	// Valores iniciales de movimientos
+	bool movChairLeftFlag = true;	// True movimiento hacia izq, False hacia der.
+	posChairLeft = -2.0f;
+
+	bool movChairBackFlag = true;	// True movimiento hacia atrás, False hacia delante
+	posChairBack = -8.0f;
+
+	bool movChairFrontFlag = true;  // True movimiento hacia delante, False hacia atrás
+	posChairFront = -6.0f;
+
+	bool movMesaFlag = true;		// True rotación antihoraria, False rotación horaria
+	posRotMesa = 90.0f;
+
+	bool movBoxesFlag = true;		// True movimiento hacia der., False hacia izq.
+	posLargeBoxes = -0.2f;
+
 	// Loop mientras no se cierre la ventana (detención de ejecución)
 	while (!mainWindow.getShouldClose())
 	{
@@ -294,6 +318,93 @@ int main()
 
 		camera.keyControl(mainWindow.getsKeys(), deltaTime);
 		camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
+
+		// Validación de valores de animaciones
+		// SillaLeft
+		if (movChairLeftFlag) {
+			if (posChairLeft > -4.0f) {
+				posChairLeft -= 0.01f;
+			} else {
+				movChairLeftFlag = false;
+			}
+		} else {
+			if (posChairLeft < -2.0f) {
+				posChairLeft += 0.01f;
+			} else {
+				movChairLeftFlag = true;
+			}
+		}
+
+		// SillaBack
+		if (movChairBackFlag) {
+			if (posChairBack > -9.75f) {
+				posChairBack -= 0.01f;
+			}
+			else {
+				movChairBackFlag = false;
+			}
+		}
+		else {
+			if (posChairBack < -8.0f) {
+				posChairBack += 0.01f;
+			}
+			else {
+				movChairBackFlag = true;
+			}
+		}
+
+		// SillaFront
+		if (movChairFrontFlag) {
+			if (posChairFront < -5.25f) {
+				posChairFront += 0.01f;
+			}
+			else {
+				movChairFrontFlag = false;
+			}
+		}
+		else {
+			if (posChairFront > -6.0f) {
+				posChairFront -= 0.01f;
+			}
+			else {
+				movChairFrontFlag = true;
+			}
+		}
+
+		// Mesa
+		if (movMesaFlag) {
+			if (posRotMesa < 100.0f) {
+				posRotMesa += 0.1f;
+			} else {
+				movMesaFlag = false;
+			}
+		} else {
+			if (posRotMesa > 80.0f) {
+				posRotMesa -= 0.1f;
+			} else {
+				movMesaFlag = true;
+			}
+		}
+
+		// Large Boxes
+		if (movBoxesFlag) {
+			if (posLargeBoxes < 2.0f) { 
+				posLargeBoxes += 0.01f;
+			}
+			else {
+				movBoxesFlag = false;
+			}
+		}
+		else {
+			if (posLargeBoxes > -1.0f) {
+				posLargeBoxes -= 0.01f;
+			}
+			else {
+				movBoxesFlag = true;
+			}
+		}
+
+
 		
 		// Clear the window
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -2507,7 +2618,7 @@ int main()
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-0.5f, -1.25f, -7.0f));
 		model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));
-		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, posRotMesa * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		Mesa.RenderModel();
@@ -2523,14 +2634,14 @@ int main()
 
 		// Modelos de las sillas
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-0.2f, -1.05f, -8.0f));
+		model = glm::translate(model, glm::vec3(-0.2f, -1.05f, posChairBack));
 		model = glm::scale(model, glm::vec3(0.09f, 0.07f, 0.09f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		Silla.RenderModel();
 
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-0.8f, -1.05f, -6.0f));
+		model = glm::translate(model, glm::vec3(-0.8f, -1.05f, posChairFront));
 		model = glm::scale(model, glm::vec3(0.09f, 0.07f, 0.09f));
 		model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -2538,7 +2649,7 @@ int main()
 		Silla.RenderModel();
 
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-2.0f, -1.05f, -7.35f));
+		model = glm::translate(model, glm::vec3(posChairLeft, -1.05f, -7.35f));
 		model = glm::scale(model, glm::vec3(0.09f, 0.07f, 0.09f));
 		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -3188,14 +3299,14 @@ int main()
 
 		// Modelos de cajas largas e interiores del local
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-0.2f, -1.45f, -4.5f));
+		model = glm::translate(model, glm::vec3(posLargeBoxes, -1.45f, -4.5f));
 		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		LargeBox.RenderModel();
 
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-0.2f, -0.85f, -4.5f));
+		model = glm::translate(model, glm::vec3(posLargeBoxes, -0.85f, -4.5f));
 		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);

@@ -1,5 +1,5 @@
 ﻿  ProyectoFinalMain.cpp
 c:\users\marco\desktop\lcgeihc-finalproject\projectfinal\projectfinal\window.h(13): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
 c:\users\marco\desktop\lcgeihc-finalproject\projectfinal\projectfinal\window.h(14): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
-c:\users\marco\desktop\lcgeihc-finalproject\projectfinal\projectfinal\proyectofinalmain.cpp(288): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+c:\users\marco\desktop\lcgeihc-finalproject\projectfinal\projectfinal\proyectofinalmain.cpp(312): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
   ProjectFinal.vcxproj -> C:\Users\marco\Desktop\LCGEIHC-FinalProject\ProjectFinal\Debug\ProjectFinal.exe
