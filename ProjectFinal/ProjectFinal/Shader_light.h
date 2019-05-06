@@ -4,7 +4,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-#include <glew.h>
+#include <GL/glew.h>
 #include "CommonValues.h"
 #include "DirectionalLight.h"
 #include "PointLight.h"

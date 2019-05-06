@@ -3,11 +3,11 @@
 #include "CommonValues.h"
 #include <vector>
 #include <string>
-#include<glew.h>
-#include<glm.hpp>
-#include<glfw3.h>
-#include <gtc\matrix_transform.hpp>
-#include<gtc\type_ptr.hpp>
+#include<GL/glew.h>
+#include<glm/glm.hpp>
+#include<GLFW/glfw3.h>
+#include <glm/gtc/matrix_transform.hpp>
+#include<glm/gtc/type_ptr.hpp>
 #include "Mesh_texturizado.h"
 #include "Shader_light.h"
 class Skybox

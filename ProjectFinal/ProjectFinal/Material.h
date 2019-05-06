@@ -1,6 +1,6 @@
 #pragma once
 
-#include <glew.h>
+#include <GL/glew.h>
 //Esta clase está pensada para crear materiales asignables a nuestros diferentes objetos y luces
 class Material
 {
